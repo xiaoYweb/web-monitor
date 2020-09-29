@@ -1,4 +1,5 @@
 import { getExtraInfo } from '../utils/getExtraInfo';
+import http from '../utils/http';
 
 window.addEventListener('error', function (ev) {
   
@@ -29,6 +30,16 @@ window.addEventListener('error', function (ev) {
     ln: lineno,
     col: colno,
   })
+
+  http.report({
+    ...getExtraInfo(),
+    errorType: 'jsError',
+    errorTypeNo: '1',
+    message,
+    ln: lineno,
+    col: colno,
+  })
+
 }, true)
 
 function report(data) {
