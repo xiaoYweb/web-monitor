@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>monitor</title>
+  <!-- <link rel="stylesheet" href="/ss.css"> -->
+</head>
+<body>
+  
+  <div>
+    <button onclick="handleJsError()">js err</button>
+    <button onclick="handlePromiseError()">promise err</button>
+  </div>
+  <script>
+    function handleJsError() {
+      window.xxx.xxx = 1
+    }
+    function handlePromiseError() {
+      Promise.reject('promise error')
+    }
+    // Promise.reject('promise error')
+  </script>
+  <!-- <script src="/xx.js"></script> -->
+  
+  <img src="/img.png" alt="">
+</body>
+</html>
