@@ -1,23 +1,30 @@
+import { getExtraInfo } from './getExtraInfo';
+
 // https://help.aliyun.com/document_detail/120218.html?spm=a2c4g.11186623.2.19.58ce5ad1ZsHDBH#reference-354467
 // img http(get post) 
 const project = 'web-monitor';
 const endpoint = 'cn-hangzhou.log.aliyuncs.com';
 const logstoreName = 'monitor-logstore';
 
-class Http {
+class WebTrack {
   constructor() {
     this.url = `http://${project}.${endpoint}/logstores/${logstoreName}/track`;
     this.xhr = new XMLHttpRequest()
-
   }
 
   report(data = {}) {
     const { xhr } = this;
     xhr.open('post', this.url, true);
+    const payload = {
+      ...getExtraInfo(),
+      ...data,
+    }
+    console.log('WebTrack -> report -> payload', payload)
+    return 
     const logs = JSON.stringify({
       // __topic__: 'topic',
       // __source__: 'source',
-      __logs__: [formatNumberToString(data)]
+      __logs__: [formatNumberToString(payload)]
     })
 
     xhr.setRequestHeader('content-type', 'application/json');
@@ -35,8 +42,11 @@ class Http {
 }
 
 
-export default new Http()
+export default new WebTrack()
 
+
+// 阿里云 数据要求 不能为 数字类型
+// 遍历对象第一层 若为 number 转化为 string 类型
 function formatNumberToString(payload) {
   const res = {}
   Object.keys(payload).forEach(key => {

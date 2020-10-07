@@ -1,5 +1,4 @@
-import { getExtraInfo } from '../utils/getExtraInfo';
-import http from '../utils/http';
+import webtrack from '../utils/webtrack';
 
 window.addEventListener('error', function (ev) {
   
@@ -22,17 +21,8 @@ window.addEventListener('error', function (ev) {
   console.log("js 脚本错误", ev, target)
   // js 脚本错误
   const { lineno, colno, message } = ev;
-  report({
-    ...getExtraInfo(),
-    errorType: 'jsError',
-    errorTypeNo: '1',
-    message,
-    ln: lineno,
-    col: colno,
-  })
 
-  http.report({
-    ...getExtraInfo(),
+  webtrack.report({
     errorType: 'jsError',
     errorTypeNo: '1',
     message,
@@ -41,7 +31,3 @@ window.addEventListener('error', function (ev) {
   })
 
 }, true)
-
-function report(data) {
-  console.log('report', data)
-}
