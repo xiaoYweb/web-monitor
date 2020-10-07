@@ -20,7 +20,7 @@ class WebTrack {
       ...data,
     }
     console.log('WebTrack -> report -> payload', payload)
-    return 
+    // return 
     const logs = JSON.stringify({
       // __topic__: 'topic',
       // __source__: 'source',
