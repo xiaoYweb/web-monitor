@@ -1,46 +1,50 @@
 import webtrack from '../utils/webtrack';
+import { sleep } from '../utils';
 
-export default function timing () {
-  const {
-    redirectStart,
-    redirectEnd,
-    fetchStart,
-    loadEventStart,
-    loadEventEnd,
-    domComplete,
-    domInteractive,
-    domainLookupStart,
-    domainLookupEnd,
-    navigationStart,
-    unloadEventStart,
-    unloadEventEnd,
-    connectStart,
-    connectEnd,
-    requestStart,
-    responseStart,
-    responseEnd,
-  } = window.performance.timing;
-
-
-  const payload = {
-    loadTime: loadEventEnd - fetchStart, // Total time from start to load
-    domReadyTime: domComplete - domInteractive, // Time spent constructing the DOM tree 解析dom树耗时 
-    readyStart: fetchStart -  navigationStart, // Time consumed preparing the new page
-    redirectTime: redirectEnd - redirectStart, // Time spent during redirection
-    appcacheTime: domainLookupStart - fetchStart, // AppCache
-    unloadEventTime: unloadEventEnd - unloadEventStart, // Time spent unloading documents
-    lookupDomainTime: domainLookupEnd - domainLookupStart, // DNS query time DNS查询耗时
-    connectTime: connectEnd - connectStart, // TCP connection time TCP链接耗时
-    requestTime: responseEnd - requestStart, // Time spent during the request request请求耗时
-    initDomTreeTime: domInteractive - responseEnd, // Request to completion of the DOM loading
-    loadEventTime: loadEventEnd - loadEventStart, // Load event time
-
-    firstPaintTime: responseStart - navigationStart, // 白屏时间
-    // operationTime: loadEventEnd - navigationStart,// domready时间(用户可操作时间节点) 
-  }
-  
+export default function timing() {
   window.addEventListener('load', () => {
-    webtrack.report(payload)
+    sleep(3000).then(() => {
+      const {
+        redirectStart,
+        redirectEnd,
+        fetchStart,
+        loadEventStart,
+        loadEventEnd,
+        domComplete,
+        domInteractive,
+        domainLookupStart,
+        domainLookupEnd,
+        navigationStart,
+        unloadEventStart,
+        unloadEventEnd,
+        connectStart,
+        connectEnd,
+        requestStart,
+        responseStart,
+        responseEnd,
+      } = window.performance.timing;
+
+
+      const payload = {
+        loadTime: loadEventEnd - fetchStart, // Total time from start to load
+        domReadyTime: domComplete - domInteractive, // Time spent constructing the DOM tree 解析dom树耗时 
+        readyStart: fetchStart - navigationStart, // Time consumed preparing the new page
+        redirectTime: redirectEnd - redirectStart, // Time spent during redirection
+        appcacheTime: domainLookupStart - fetchStart, // AppCache
+        unloadEventTime: unloadEventEnd - unloadEventStart, // Time spent unloading documents
+        lookupDomainTime: domainLookupEnd - domainLookupStart, // DNS query time DNS查询耗时
+        connectTime: connectEnd - connectStart, // TCP connection time TCP链接耗时
+        requestTime: responseEnd - requestStart, // Time spent during the request request请求耗时
+        initDomTreeTime: domInteractive - responseEnd, // Request to completion of the DOM loading
+        loadEventTime: loadEventEnd - loadEventStart, // Load event time
+
+        firstPaintTime: responseStart - navigationStart, // 白屏时间
+        // operationTime: loadEventEnd - navigationStart,// domready时间(用户可操作时间节点) 
+      }
+
+      webtrack.report(payload)
+    })
+
   })
 }
 

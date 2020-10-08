@@ -7,7 +7,6 @@ export default function enhanceAjax() {
   const _send = _XMLHttpRequest.prototype.send;
 
   XMLHttpRequest.prototype.open = function () { // arguments -- method, url, asunc
-    console.log('arguments', arguments, this)
     if (!(arguments[1].includes('logstores') || arguments[1].includes('sockjs-node'))) { //
       this.needReport = true;
       this._url = arguments[1];
