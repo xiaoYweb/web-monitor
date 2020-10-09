@@ -8,14 +8,15 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    library: 'sdk',
-    libraryTarget: 'window'
+    library: 'WebMonitor',
+    libraryTarget: 'umd',
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      inject: 'head'
+      // inject: false,
+      inject: 'head',
     })
   ],
   devServer: {

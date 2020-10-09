@@ -1,14 +1,11 @@
 import { getExtraInfo } from './getExtraInfo';
-
+import { getConfig } from '../../config'
 // https://help.aliyun.com/document_detail/120218.html?spm=a2c4g.11186623.2.19.58ce5ad1ZsHDBH#reference-354467
 // img http(get post) 
-const project = 'web-monitor';
-const endpoint = 'cn-hangzhou.log.aliyuncs.com';
-const logstoreName = 'monitor-logstore';
-
 class WebTrack {
   constructor() {
-    this.url = `http://${project}.${endpoint}/logstores/${logstoreName}/track`;
+    const { reportUrl } = getConfig()
+    this.url = reportUrl;
     this.xhr = new XMLHttpRequest()
   }
 

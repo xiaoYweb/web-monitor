@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>monitor</title>
+  <!-- <%= htmlWebpackPlugin.tags.headTags %> -->
   <!-- <link rel="stylesheet" href="/ss.css"> -->
 </head>
 <body>
-  
+  <script>
+    new WebMonitor.default({
+     appName: 'testName',
+   }) 
+ </script>
   <div>
     <button onclick="handleJsError()">js err</button>
     <button onclick="handlePromiseError()">promise err</button>
