@@ -1,13 +1,16 @@
+import { handleBantchReport } from '../utils';
+
+const cache = [];
+
 export default function enhanceAjax() {
-  const report = this?.report;
-  const allowApiList = this?.allowApiList;
+  const { allowApiList, report, onoceReport } = this;
+  
   const _XMLHttpRequest = window.XMLHttpRequest;
   const _open = _XMLHttpRequest.prototype.open;
   const _send = _XMLHttpRequest.prototype.send;
   XMLHttpRequest.prototype.open = function () { // arguments -- method, url, asunc
     const url = arguments[1];
-    // console.log("🚀 ~ file: ajax.js ~ line 11 ~ enhanceAjax ~ url", url)
-    
+
     if (allowApiList.some(api => url.includes(api))) { // 匹配是否需要 上传
       this.needReport = true;
       this._url = url;
@@ -23,7 +26,7 @@ export default function enhanceAjax() {
         const duration = Date.now() - startTime;
         const status = this.status;
         const statusText = this.statusText;
-        const paylaod = {
+        const payload = {
           type: 'ajax',
           duration,
           requestUrl: this._url,
@@ -33,7 +36,20 @@ export default function enhanceAjax() {
           body,
           response: JSON.stringify(this.response),
         }
-        report && report(paylaod)
+        handleBantchReport({
+          report, 
+          cache, 
+          payload,
+          maxLength: onoceReport?.ajax
+        })
+        // if (!report) return 
+        // const len = cache.length;
+        // const needReport = len >= onoceReport?.ajax;
+        // if (needReport) {
+        //   report([...cache])
+        //   cache.length = 0;
+        // } 
+        // cache.push(payload)
       }
 
       this.addEventListener('load', handler('load'), false)
@@ -46,3 +62,4 @@ export default function enhanceAjax() {
 
 
 }
+

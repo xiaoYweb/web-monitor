@@ -1,5 +1,11 @@
+import { handleBantchReport } from '../utils';
+
+const sourceCache = []
+const cache = [];
+
 export default function recordJsError() {
-  const report = this?.report;
+  const { report, onoceReport } = this;
+  
   window.addEventListener('error', function (ev) {
    const { target } = ev;
 
@@ -13,14 +19,13 @@ export default function recordJsError() {
         nodeName,
         source: target.href || target.src,
       }
-      
       report && report(payload)
       return
     }
 
     // console.log("js 脚本错误", ev, target)
     // js 脚本错误
-    const { lineno, colno, message, error: { stack } } = ev;
+    const { lineno, colno, message } = ev;
 
     const payload = {
       errorType: 'jsError',
@@ -29,10 +34,12 @@ export default function recordJsError() {
       ln: lineno,
       col: colno,
       position: `${lineno}:${colno}`,
-      stack,
+      stack: ev?.error?.stack,
     }
-
-    report && report(payload)
-
+    handleBantchReport({
+      report, cache, payload,
+      maxLength: onoceReport?.jsError,
+    })
+    // report && report(payload)
   }, true)
 }

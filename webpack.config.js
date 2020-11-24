@@ -37,10 +37,10 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'dist'),
     port: 9000,
     before(router) {
-      router.get('/local/success', function (req, res) {
+      router.get('/self/success', function (req, res) {
         res.json({ id: 1 })
       })
-      router.post('/local/error', function (req, res) {
+      router.post('/self/error', function (req, res) {
         res.setStatus(500)
       })
     }

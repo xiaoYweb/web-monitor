@@ -1,5 +1,10 @@
+import { handleBantchReport } from '../utils';
+
+const cache = [];
+
 export default function recordPromiseError() {
-  const report = this?.report;
+  const { report, onoceReport } = this;
+
   window.addEventListener("unhandledrejection", function (ev) {
     // ev.preventDefault() // 
     // console.log('promise 错误', ev);
@@ -8,7 +13,7 @@ export default function recordPromiseError() {
       errorTypeNo: '3',
     }
     const { reason } = ev;
-    
+
     if (typeof reason === 'string') {
       Object.assign(payload, {
         message: reason,
@@ -16,7 +21,7 @@ export default function recordPromiseError() {
     } else {
       const { message, stack } = reason;
       const matchedResult = stack.match(/:(\d+):(\d+)/) || [];
-      
+
       Object.assign(payload, {
         message,
         stack,
@@ -24,7 +29,11 @@ export default function recordPromiseError() {
       })
     }
 
-    report && report(payload)
+    // report && report(payload)
+    handleBantchReport({
+      report, cache, payload,
+      maxLength: onoceReport?.promiseError,
+    })
 
     return true;
   }, true);

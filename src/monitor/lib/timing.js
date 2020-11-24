@@ -1,7 +1,8 @@
 import { sleep } from '../utils';
 
 export default function timing() {
-  const report = this?.report;
+  const { report } = this;
+
   window.addEventListener('load', () => {
     sleep(3000).then(() => {
       const {
