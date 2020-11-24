@@ -19,7 +19,11 @@ export default function recordJsError() {
         nodeName,
         source: target.href || target.src,
       }
-      report && report(payload)
+      // report && report(payload)
+      handleBantchReport({
+        report, cache: sourceCache, payload,
+        maxLength: onoceReport?.resourceError,
+      })
       return
     }
 

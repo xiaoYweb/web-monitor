@@ -3,23 +3,26 @@ import recordPromiseError from './monitor/lib/promiseError';
 import enhanceAjax from './monitor/lib/ajax';
 import timing from './monitor/lib/timing';
 import axios from 'axios';
-import { getExtraInfo } from './monitor/utils/getExtraInfo';
 
 export default class WebMonitor {
   constructor(props) {
     const { allowApiList = [], report, onoceReport = {}, appName } = props;
-    
+
     const defaultOnceReport = {
       ajax: 5,
       jsError: 1,
+      resourceError: 2,
       promiseError: 5,
+      timing: 1,
     }
-
-    this.allowApiList = allowApiList || []; // 允许上报的 /api   包含关系
-    this.report = (params) => {
-      report({ ...params, appName, ...getExtraInfo() })
-    };
     this.onoceReport = Object.assign(defaultOnceReport, onoceReport);
+    this.allowApiList = allowApiList || []; // 允许上报的 /api   包含关系
+    
+    this.report = (params) => {
+      report(params?.map(item => ({...item, appName})))
+    };
+
+
   }
 
   init() {
@@ -28,7 +31,7 @@ export default class WebMonitor {
     this.enhanceAjax()
     this.timing()
   }
-  
+
   enhanceAjax(...r) {
     enhanceAjax.apply(this, r)
   }
@@ -47,13 +50,14 @@ export default class WebMonitor {
   // timing
 }
 
-window._userName = 'testName';
-window._userId = 'testId';
-new WebMonitor({
-  appName: 'Test',
-  report: (payload) => { // 上报内容
-    console.log('report --> payload', payload)
-    axios.post('http://127.0.0.1:7001/api/report', payload)
-  },
-  allowApiList: ['/self'], // 允许上报的 /api 包含关系 
-}).init()
+// ------------- 下方代码 build 后 需要注释 ------------------------------------------
+// window._userName = 'testName';
+// window._userId = 'testId';
+// new WebMonitor({
+//   appName: 'Test',
+//   report: (payload) => { // 上报内容
+//     console.log('report --> payload', payload)
+//     axios.post('http://127.0.0.1:7001/api/report', payload)
+//   },
+//   allowApiList: ['/self'], // 允许上报的 /api 包含关系 
+// }).init()

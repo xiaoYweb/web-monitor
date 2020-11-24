@@ -1,7 +1,9 @@
-import { sleep } from '../utils';
+import { sleep, handleBantchReport } from '../utils';
+
+const cache = [];
 
 export default function timing() {
-  const { report } = this;
+  const { report, onoceReport } = this;
 
   window.addEventListener('load', () => {
     sleep(3000).then(() => {
@@ -43,7 +45,11 @@ export default function timing() {
         // operationTime: loadEventEnd - navigationStart,// domready时间(用户可操作时间节点) 
       }
 
-      report && report(payload)
+      handleBantchReport({
+        report, cache, payload,
+        maxLength: onoceReport?.timing,
+      })
+      // report && report(payload)
     })
 
   })
