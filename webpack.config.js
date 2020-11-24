@@ -11,6 +11,20 @@ module.exports = {
     library: 'WebMonitor',
     libraryTarget: 'umd',
   },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }
+    ]
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
@@ -23,10 +37,10 @@ module.exports = {
     contentBase: path.resolve(__dirname, 'dist'),
     port: 9000,
     before(router) {
-      router.get('/success', function (req, res) {
+      router.get('/local/success', function (req, res) {
         res.json({ id: 1 })
       })
-      router.post('/error', function (req, res) {
+      router.post('/local/error', function (req, res) {
         res.setStatus(500)
       })
     }

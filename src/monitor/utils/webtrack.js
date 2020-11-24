@@ -10,14 +10,16 @@ class WebTrack {
   }
 
   report(data = {}) {
-    const { xhr } = this;
-    xhr.open('post', this.url, true);
     const payload = {
       ...getExtraInfo(),
       ...data,
     }
     console.log('WebTrack -> report -> payload', payload)
-    // return 
+    return 
+    
+    const { xhr } = this;
+    xhr.open('post', this.url, true);
+    
     const logs = JSON.stringify({
       // __topic__: 'topic',
       // __source__: 'source',

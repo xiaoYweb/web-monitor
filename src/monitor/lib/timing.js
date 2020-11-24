@@ -1,7 +1,7 @@
-import webtrack from '../utils/webtrack';
 import { sleep } from '../utils';
 
 export default function timing() {
+  const report = this?.report;
   window.addEventListener('load', () => {
     sleep(3000).then(() => {
       const {
@@ -42,7 +42,7 @@ export default function timing() {
         // operationTime: loadEventEnd - navigationStart,// domready时间(用户可操作时间节点) 
       }
 
-      webtrack.report(payload)
+      report && report(payload)
     })
 
   })

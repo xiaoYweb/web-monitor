@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,16 @@
   <!-- <%= htmlWebpackPlugin.tags.headTags %> -->
   <!-- <link rel="stylesheet" href="/ss.css"> -->
 </head>
+
 <body>
   <script>
-    new WebMonitor.default({
-     appName: 'testName',
-   }) 
- </script>
+    // new WebMonitor.default({
+    //   report: (payload) => { // 上报内容
+    //     console.log('report --> payload', payload)
+    //   },
+    //   allowApiList: ['/fms-manage'] // 允许上报的 /api 包含关系 
+    // }).init()
+  </script>
   <div>
     <button onclick="handleJsError()">js err</button>
     <button onclick="handlePromiseError()">promise err</button>
@@ -25,33 +30,35 @@
     }
     function handlePromiseError() {
       // Promise.reject('promise error')
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         window.err.promise = 1
+        console.log('-----')
       })
     }
     // Promise.reject('promise error')
 
-    function requestSuccess(){
+    function requestSuccess() {
       const xhr = new XMLHttpRequest()
-      xhr.open('GET', '/success', true)
+      xhr.open('GET', '/local/success', true)
       xhr.responseType = 'json';
-      xhr.onload = function(){
+      xhr.onload = function () {
         console.log('success', xhr.response)
       }
       xhr.send()
     }
-    function requestError(){
+    function requestError() {
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', '/error', true)
+      xhr.open('POST', '/local/error', true)
       xhr.responseType = 'json';
-      xhr.onerror = function(err){
+      xhr.onerror = function (err) {
         console.log('error', err)
       }
       xhr.send()
     }
   </script>
   <!-- <script src="/xx.js"></script> -->
-  
+
   <!-- <img src="/img.png" alt=""> -->
 </body>
+
 </html>

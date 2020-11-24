@@ -1,14 +1,14 @@
-import webtrack from '../utils/webtrack';
-
 export default function recordPromiseError() {
+  const report = this?.report;
   window.addEventListener("unhandledrejection", function (ev) {
     // ev.preventDefault() // 
-    console.log('promise 错误', ev);
+    // console.log('promise 错误', ev);
     const payload = {
       errorType: 'unhandled rejection',
       errorTypeNo: '3',
     }
     const { reason } = ev;
+    
     if (typeof reason === 'string') {
       Object.assign(payload, {
         message: reason,
@@ -24,8 +24,8 @@ export default function recordPromiseError() {
       })
     }
 
+    report && report(payload)
 
-    webtrack.report(payload)
     return true;
   }, true);
 }
