@@ -3,7 +3,7 @@ import { handleBantchReport } from '../utils';
 const cache = [];
 
 export default function enhanceAjax() {
-  const { allowApiList, report, onoceReport } = this;
+  const { allowApiList, report, onceReport } = this;
   
   const _XMLHttpRequest = window.XMLHttpRequest;
   const _open = _XMLHttpRequest.prototype.open;
@@ -27,24 +27,25 @@ export default function enhanceAjax() {
         const status = this.status;
         const statusText = this.statusText;
         const payload = {
-          type: 'ajax',
+          type: 'api',
+          requestType: 'ajax',
           duration,
           requestUrl: this._url,
           status,
           statusText,
-          ajaxType: type,
-          body,
-          response: JSON.stringify(this.response),
+          ajaxType: type, // load error abord
+          body, // send 入参 请求体
+          // response: JSON.stringify(this.response),
         }
         handleBantchReport({
           report, 
           cache, 
           payload,
-          maxLength: onoceReport?.ajax
+          maxLength: onceReport?.api
         })
         // if (!report) return 
         // const len = cache.length;
-        // const needReport = len >= onoceReport?.ajax;
+        // const needReport = len >= onceReport?.ajax;
         // if (needReport) {
         //   report([...cache])
         //   cache.length = 0;

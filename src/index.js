@@ -6,16 +6,16 @@ import axios from 'axios';
 
 export default class WebMonitor {
   constructor(props) {
-    const { allowApiList = [], report, onoceReport = {}, appName } = props;
+    const { allowApiList = [], report, onceReport = {}, appName } = props;
 
     const defaultOnceReport = {
-      ajax: 5,
+      api: 5, // n 接口/次 上报频率
       jsError: 1,
       resourceError: 2,
       promiseError: 5,
       timing: 1,
     }
-    this.onoceReport = Object.assign(defaultOnceReport, onoceReport);
+    this.onceReport = Object.assign(defaultOnceReport, onceReport);
     this.allowApiList = allowApiList || []; // 允许上报的 /api   包含关系
     
     this.report = (params) => {
@@ -51,13 +51,15 @@ export default class WebMonitor {
 }
 
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
-// window._userName = 'testName';
-// window._userId = 'testId';
-// new WebMonitor({
-//   appName: 'Test',
-//   report: (payload) => { // 上报内容
-//     console.log('report --> payload', payload)
-//     axios.post('http://127.0.0.1:7001/api/report', payload)
-//   },
-//   allowApiList: ['/self'], // 允许上报的 /api 包含关系 
-// }).init()
+window._userInfo = {
+  userName: 'testName',
+  userId: 'testId',
+};
+new WebMonitor({
+  appName: 'Test',
+  report: (payload) => { // 上报内容
+    console.log('report --> payload', payload)
+    axios.post('http://127.0.0.1:7001/api/report', payload)
+  },
+  allowApiList: ['/self'], // 允许上报的 /api 包含关系 
+}).init()

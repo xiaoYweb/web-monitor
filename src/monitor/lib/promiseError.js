@@ -3,14 +3,13 @@ import { handleBantchReport } from '../utils';
 const cache = [];
 
 export default function recordPromiseError() {
-  const { report, onoceReport } = this;
+  const { report, onceReport } = this;
 
   window.addEventListener("unhandledrejection", function (ev) {
     // ev.preventDefault() // 
     // console.log('promise 错误', ev);
     const payload = {
-      errorType: 'unhandled rejection',
-      errorTypeNo: '3',
+      type: 'unhandledRejection',
     }
     const { reason } = ev;
 
@@ -32,7 +31,7 @@ export default function recordPromiseError() {
     // report && report(payload)
     handleBantchReport({
       report, cache, payload,
-      maxLength: onoceReport?.promiseError,
+      maxLength: onceReport?.promiseError,
     })
 
     return true;

@@ -4,7 +4,7 @@ const sourceCache = []
 const cache = [];
 
 export default function recordJsError() {
-  const { report, onoceReport } = this;
+  const { report, onceReport } = this;
   
   window.addEventListener('error', function (ev) {
    const { target } = ev;
@@ -14,15 +14,14 @@ export default function recordJsError() {
       // console.log("资源加载 错误", target, ev)
       const { nodeName } = target;
       const payload = {
-        errorType: '资源加载错误', // resource error
-        errorTypeNo: '2',
-        nodeName,
-        source: target.href || target.src,
+        type: 'resourceError', // resource error、
+        nodeName, // 标签名
+        source: target.href || target.src, // 资源地址
       }
       // report && report(payload)
       handleBantchReport({
         report, cache: sourceCache, payload,
-        maxLength: onoceReport?.resourceError,
+        maxLength: onceReport?.resourceError,
       })
       return
     }
@@ -32,17 +31,16 @@ export default function recordJsError() {
     const { lineno, colno, message } = ev;
 
     const payload = {
-      errorType: 'jsError',
-      errorTypeNo: '1',
+      type: 'jsError',
       message,
-      ln: lineno,
-      col: colno,
+      // ln: lineno,
+      // col: colno,
       position: `${lineno}:${colno}`,
       stack: ev?.error?.stack,
     }
     handleBantchReport({
       report, cache, payload,
-      maxLength: onoceReport?.jsError,
+      maxLength: onceReport?.jsError,
     })
     // report && report(payload)
   }, true)

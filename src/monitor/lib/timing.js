@@ -3,7 +3,7 @@ import { sleep, handleBantchReport } from '../utils';
 const cache = [];
 
 export default function timing() {
-  const { report, onoceReport } = this;
+  const { report, onceReport } = this;
 
   window.addEventListener('load', () => {
     sleep(3000).then(() => {
@@ -25,10 +25,11 @@ export default function timing() {
         requestStart,
         responseStart,
         responseEnd,
-      } = window.performance.timing;
+      } = window?.performance?.timing || {};
 
 
       const payload = {
+        type: 'timing',
         loadTime: loadEventEnd - fetchStart, // Total time from start to load
         domReadyTime: domComplete - domInteractive, // Time spent constructing the DOM tree 解析dom树耗时 
         readyStart: fetchStart - navigationStart, // Time consumed preparing the new page
@@ -42,12 +43,12 @@ export default function timing() {
         loadEventTime: loadEventEnd - loadEventStart, // Load event time
 
         firstPaintTime: responseStart - navigationStart, // 白屏时间
-        // operationTime: loadEventEnd - navigationStart,// domready时间(用户可操作时间节点) 
+        operationTime: loadEventEnd - navigationStart,// domready时间(用户可操作时间节点) 
       }
 
       handleBantchReport({
         report, cache, payload,
-        maxLength: onoceReport?.timing,
+        maxLength: onceReport?.timing,
       })
       // report && report(payload)
     })
