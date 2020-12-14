@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server",
-    "build": "webpack"
+    "build": "webpack --config prod.config.js"
   },
   "dependencies": {
     "axios": "^0.21.0",

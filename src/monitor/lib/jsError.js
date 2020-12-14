@@ -1,10 +1,5 @@
-import { handleBantchReport } from '../utils';
-
-const sourceCache = []
-const cache = [];
-
 export default function recordJsError() {
-  const { report, onceReport } = this;
+  const { report } = this;
   
   window.addEventListener('error', function (ev) {
    const { target } = ev;
@@ -18,11 +13,7 @@ export default function recordJsError() {
         nodeName, // 标签名
         source: target.href || target.src, // 资源地址
       }
-      // report && report(payload)
-      handleBantchReport({
-        report, cache: sourceCache, payload,
-        maxLength: onceReport?.resourceError,
-      })
+      report && report(payload) // 实例挂载的 上报方法
       return
     }
 
@@ -38,10 +29,7 @@ export default function recordJsError() {
       position: `${lineno}:${colno}`,
       stack: ev?.error?.stack,
     }
-    handleBantchReport({
-      report, cache, payload,
-      maxLength: onceReport?.jsError,
-    })
-    // report && report(payload)
+    
+    report && report(payload) // 实例挂载的 上报方法
   }, true)
 }

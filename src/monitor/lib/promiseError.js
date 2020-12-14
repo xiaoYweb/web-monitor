@@ -1,9 +1,5 @@
-import { handleBantchReport } from '../utils';
-
-const cache = [];
-
 export default function recordPromiseError() {
-  const { report, onceReport } = this;
+  const { report } = this;
 
   window.addEventListener("unhandledrejection", function (ev) {
     // ev.preventDefault() // 
@@ -28,11 +24,7 @@ export default function recordPromiseError() {
       })
     }
 
-    // report && report(payload)
-    handleBantchReport({
-      report, cache, payload,
-      maxLength: onceReport?.promiseError,
-    })
+    report && report(payload) // 实例挂载的 上报方法
 
     return true;
   }, true);

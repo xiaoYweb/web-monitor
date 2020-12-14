@@ -1,56 +1,59 @@
-import { handleBantchReport } from '../utils';
+const URL = require('url')
 
-const cache = [];
-
+window.n = 0
+const xx = 10
 export default function enhanceAjax() {
-  const { allowApiList, report, onceReport } = this;
-  
+  const { allowApiList, report } = this;
+
   const _XMLHttpRequest = window.XMLHttpRequest;
   const _open = _XMLHttpRequest.prototype.open;
   const _send = _XMLHttpRequest.prototype.send;
   XMLHttpRequest.prototype.open = function () { // arguments -- method, url, asunc
     const url = arguments[1];
-
-    if (allowApiList.some(api => url.includes(api))) { // 匹配是否需要 上传
+    const requestUrl = selfDecodeURI(url)
+    const method = arguments[0].toLowerCase()
+    const { path } = URL.parse(requestUrl)
+    
+    
+    window.n++
+    if (window.n > xx) return
+    if (allowApiList.some(api => path.startsWith(api))) { // 匹配是否需要 上传
       this.needReport = true;
-      this._url = url;
+      this._url = requestUrl;
+      this._method = method;
     }
     return _open.apply(this, arguments)
   }
 
   XMLHttpRequest.prototype.send = function (body) { // json string 
+    if (window.n > xx) return
     if (this.needReport) { // 判断是否需要 上报
       const startTime = Date.now();
 
       const handler = type => () => {
         const duration = Date.now() - startTime;
-        const status = this.status;
-        const statusText = this.statusText;
+        const { status, statusText, response, _url: requestUrl, _method: method } = this;
+
+        const { query } = URL.parse(requestUrl)
+        
+        const isSuccessStatus = (status >= 200 && status < 300) || status === 304;
+        // 不上报成功的 接口
+        if (type === 'load' && isSuccessStatus) return
         const payload = {
           type: 'api',
           requestType: 'ajax',
           duration,
-          requestUrl: this._url,
+          requestUrl,
+          query,
+          method,
           status,
           statusText,
           ajaxType: type, // load error abord
           body, // send 入参 请求体
-          // response: JSON.stringify(this.response),
+          response: JSON.stringify(response),
         }
-        handleBantchReport({
-          report, 
-          cache, 
-          payload,
-          maxLength: onceReport?.api
-        })
-        // if (!report) return 
-        // const len = cache.length;
-        // const needReport = len >= onceReport?.ajax;
-        // if (needReport) {
-        //   report([...cache])
-        //   cache.length = 0;
-        // } 
-        // cache.push(payload)
+
+        report && report(payload) // 实例挂载的 上报方法
       }
 
       this.addEventListener('load', handler('load'), false)
@@ -61,6 +64,15 @@ export default function enhanceAjax() {
     return _send.apply(this, arguments)
   }
 
-
+  
 }
 
+
+function selfDecodeURI(str) {
+  try {
+    str = decodeURI(str)
+  } catch (err) {
+    console.log('selDecodeURI --> err', err)
+  }
+  return str;
+}
