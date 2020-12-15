@@ -1,11 +1,12 @@
-import { sleep, handleBantchReport } from '../utils';
+import { sleep } from '../utils';
 
 
 export default function timing() {
-  const { report } = this;
+  const { report, frequency: { timing } } = this;
 
   window.addEventListener('load', () => {
-    sleep(3000).then(() => {
+    const willdo = Math.random() < timing;
+    willdo && sleep(3000).then(() => {
       const {
         redirectStart,
         redirectEnd,
@@ -44,6 +45,7 @@ export default function timing() {
         firstPaintTime: responseStart - navigationStart, // 白屏时间
         operationTime: loadEventEnd - navigationStart,// domready时间(用户可操作时间节点) 
       }
+      
 
       report && report(payload) // 实例挂载的 上报方法
     })

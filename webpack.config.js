@@ -9,7 +9,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
     library: 'WebMonitor',
-    libraryTarget: 'umd',
+    libraryTarget: 'var',
+    libraryExport: 'default'
   },
   module: {
     rules: [

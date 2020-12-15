@@ -1,9 +1,9 @@
 export default function recordJsError() {
-  const { report } = this;
-  
-  window.addEventListener('error', function (ev) {
-   const { target } = ev;
+  const { report, frequency: { jsError } } = this;
 
+  window.addEventListener('error', function (ev) {
+    const { target } = ev;
+    const willdo = Math.random() < jsError;
     // 资源加载错误
     if (target && (target.href || target.src)) {
       // console.log("资源加载 错误", target, ev)
@@ -13,7 +13,7 @@ export default function recordJsError() {
         nodeName, // 标签名
         source: target.href || target.src, // 资源地址
       }
-      report && report(payload) // 实例挂载的 上报方法
+      willdo && report && report(payload) // 实例挂载的 上报方法
       return
     }
 
@@ -29,7 +29,7 @@ export default function recordJsError() {
       position: `${lineno}:${colno}`,
       stack: ev?.error?.stack,
     }
-    
-    report && report(payload) // 实例挂载的 上报方法
+
+    willdo && report && report(payload) // 实例挂载的 上报方法
   }, true)
 }

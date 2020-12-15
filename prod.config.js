@@ -10,6 +10,7 @@ module.exports = {
     filename: 'bundle.js',
     library: 'WebMonitor',
     libraryTarget: 'umd',
+    libraryExport: 'default', 
   },
   module: {
     rules: [

@@ -11,12 +11,15 @@
 
 <body>
   <script>
-    // new WebMonitor.default({
-    //   report: (payload) => { // 上报内容
-    //     console.log('report --> payload', payload)
-    //   },
-    //   allowApiList: ['/fms-manage'] // 允许上报的 /api 包含关系 
-    // }).init()
+    window._userInfo = {
+      userName: 'testName',
+      userId: 'testId',
+    };
+    new WebMonitor({
+      appName: 'Test',
+      reportUrl: 'http://127.0.0.1:7003/webmonitor/report',
+      allowApiList: ['/self'], // 允许上报的 /api 包含关系 
+    }).init()
   </script>
   <div>
     <button onclick="handleJsError()">js err</button>
@@ -51,8 +54,8 @@
         console.log('success', xhr.response)
       }
       xhr.send(JSON.stringify({
-          name: 'xxxx'
-        }))
+        name: 'xxxx'
+      }))
     }
 
     function requestError() {
@@ -63,8 +66,8 @@
         console.log('error', err)
       }
       xhr.send(JSON.stringify({
-          name: 'xxxx'
-        }))
+        name: 'xxxx'
+      }))
     }
 
     function addScript() {
@@ -98,14 +101,14 @@
           id: '120'
         })
       })
-      .then(res => {
-        console.log('fetchSuccess --> res', res)
-        return res.text()
-      }).then(result => {
-        console.log('fetchSuccess --> result', result)
-      }).catch(err => {
-        console.log('fetchSuccess --> err', err)
-      })
+        .then(res => {
+          console.log('fetchSuccess --> res', res)
+          return res.text()
+        }).then(result => {
+          console.log('fetchSuccess --> result', result)
+        }).catch(err => {
+          console.log('fetchSuccess --> err', err)
+        })
     }
 
     function fetchError() {
@@ -127,7 +130,7 @@
       }).then(result => {
         console.log('fetchError --> result', result)
       }).catch(err => {
-        
+
         console.log('fetchError --> err', Object.keys(err), err)
       })
     }

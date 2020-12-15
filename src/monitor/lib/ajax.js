@@ -1,9 +1,8 @@
 const URL = require('url')
 
-window.n = 0
-const xx = 10
+
 export default function enhanceAjax() {
-  const { allowApiList, report } = this;
+  const { allowApiList, report, frequency: { apiError } } = this;
 
   const _XMLHttpRequest = window.XMLHttpRequest;
   const _open = _XMLHttpRequest.prototype.open;
@@ -15,8 +14,6 @@ export default function enhanceAjax() {
     const { path } = URL.parse(requestUrl)
     
     
-    window.n++
-    if (window.n > xx) return
     if (allowApiList.some(api => path.startsWith(api))) { // 匹配是否需要 上传
       this.needReport = true;
       this._url = requestUrl;
@@ -26,7 +23,6 @@ export default function enhanceAjax() {
   }
 
   XMLHttpRequest.prototype.send = function (body) { // json string 
-    if (window.n > xx) return
     if (this.needReport) { // 判断是否需要 上报
       const startTime = Date.now();
 
@@ -37,6 +33,7 @@ export default function enhanceAjax() {
         const { query } = URL.parse(requestUrl)
         
         const isSuccessStatus = (status >= 200 && status < 300) || status === 304;
+        const willdo = Math.random() < apiError;
         // 不上报成功的 接口
         if (type === 'load' && isSuccessStatus) return
         const payload = {
@@ -53,7 +50,7 @@ export default function enhanceAjax() {
           response: JSON.stringify(response),
         }
 
-        report && report(payload) // 实例挂载的 上报方法
+        willdo && report && report(payload) // 实例挂载的 上报方法
       }
 
       this.addEventListener('load', handler('load'), false)
