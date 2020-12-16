@@ -1,3 +1,8 @@
+// 忽略此类错误
+const ignoreError = [
+  'ResizeObserver loop limit exceeded',
+]
+
 export default function recordJsError() {
   const { report, frequency: { jsError } } = this;
 
@@ -20,6 +25,11 @@ export default function recordJsError() {
     // console.log("js 脚本错误", ev, target)
     // js 脚本错误
     const { lineno, colno, message } = ev;
+    
+    if (ignoreError.includes(message)) { // 忽略此类错误
+      console.log('忽略错误 --> ', message)
+      return 
+    }
 
     const payload = {
       type: 'jsError',

@@ -83,7 +83,7 @@ export default class WebMonitor {
   // recordPromiseError
   // timing
 }
-
+console.log('最新修改版本ignore jsError ResizeObserver loop limit exceeded')
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
 // window._userInfo = {
 //   userName: 'testName',
