@@ -1,5 +1,5 @@
 const URL = require('url')
-
+const { selfDecodeURI, selfStringify } = require('../utils')
 
 export default function enhanceAjax() {
   const { allowApiList, report, frequency: { apiError } } = this;
@@ -47,7 +47,7 @@ export default function enhanceAjax() {
           statusText,
           ajaxType: type, // load error abord
           body, // send 入参 请求体
-          response: JSON.stringify(response),
+          response: selfStringify(response),
         }
 
         willdo && report && report(payload) // 实例挂载的 上报方法
@@ -60,16 +60,4 @@ export default function enhanceAjax() {
 
     return _send.apply(this, arguments)
   }
-
-  
-}
-
-
-function selfDecodeURI(str) {
-  try {
-    str = decodeURI(str)
-  } catch (err) {
-    console.log('selDecodeURI --> err', err)
-  }
-  return str;
 }

@@ -4,7 +4,7 @@ import enhanceAjax from './monitor/lib/ajax';
 import enhanceFetch from './monitor/lib/fetch';
 import timing from './monitor/lib/timing';
 import axios from 'axios';
-import { getExtraInfo } from './monitor/utils';
+import { getExtraInfo, selfStringify } from './monitor/utils';
 
 
 export default class WebMonitor {
@@ -44,13 +44,14 @@ export default class WebMonitor {
   }
 
   xhrReport(reportUrl, payload) {
-    axios.post(reportUrl, payload).catch(err => {
+    debugger
+    axios.get(reportUrl, { params: payload }).catch(err => {
       console.log('sdk insideReport err', err)
     })
   }
 
   imgReport(reportUrl, payload) {
-    const data = (JSON.stringify(payload))
+    const data = selfStringify(payload)
     const img = new Image()
     img.src = `${reportUrl}?data=${data}`;
   }
@@ -97,7 +98,7 @@ console.log('最新修改版本ignore jsError ResizeObserver loop limit exceeded
 //     axios.post('http://127.0.0.1:7003/webmonitor/report', payload).catch(err => {
 
 //     })
-//     const data = (JSON.stringify(payload))
+//     const data = selfStringify(payload)
 //     axios.get('http://127.0.0.1:7003/webmonitor/report', { params: { data } }).catch(err => {
 
 //     })

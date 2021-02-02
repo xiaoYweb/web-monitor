@@ -15,13 +15,13 @@ export default function recordPromiseError() {
         message: reason,
       })
     } else {
-      const { message, stack } = reason;
+      const { message, stack = '' } = reason;
       const matchedResult = stack.match(/:(\d+):(\d+)/) || [];
 
       Object.assign(payload, {
         message,
         stack,
-        position: `${matchedResult[1]}:${matchedResult[2]}`
+        position: matchedResult.length > 0 ? `${matchedResult[1]}:${matchedResult[2]}` : ''
       })
     }
 
