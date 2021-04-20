@@ -26,14 +26,14 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-      // inject: false,
-      inject: 'head',
-    })
-  ],
+  // plugins: [
+  //   new CleanWebpackPlugin(),
+  //   new HtmlWebpackPlugin({
+  //     template: './src/index.html',
+  //     // inject: false,
+  //     inject: 'head',
+  //   })
+  // ],
   // devServer: {
   //   contentBase: path.resolve(__dirname, 'dist'),
   //   port: 9000,

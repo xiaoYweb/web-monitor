@@ -1,7 +1,9 @@
 // 忽略此类错误
 const ignoreError = [
-  'ResizeObserver loop limit exceeded', // google 
-  'ResizeObserver loop completed with undelivered notifications', // safari 浏览器 
+  // 'ResizeObserver loop limit exceeded', // google 
+  // 'ResizeObserver loop completed with undelivered notifications.', // safari 浏览器 
+  /ResizeObserver/g,
+  /^Script error\.?$/,
 ]
 
 export default function recordJsError() {
@@ -27,7 +29,11 @@ export default function recordJsError() {
     // js 脚本错误
     const { lineno, colno, message } = ev;
     
-    if (ignoreError.includes(message)) { // 忽略此类错误
+    // if (ignoreError.includes(message)) { // 忽略此类错误
+    //   console.log('忽略 js 脚本错误 --> ', message)
+    //   return 
+    // }
+    if (typeof message === 'string' && ignoreError.some(re => re.test(message))) {
       console.log('忽略 js 脚本错误 --> ', message)
       return 
     }

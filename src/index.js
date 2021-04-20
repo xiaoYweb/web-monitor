@@ -14,7 +14,7 @@ export default class WebMonitor {
       throw new Error('appName 为必填项')
     }
     if (!report && !reportUrl) {
-      throw new Error('report 为必填项')
+      throw new Error('reportUrl 为必填项')
     }
     if (allowApiList.some(item => item.includes('webmonitor'))) {
       throw new Error('/webmonitor 不能作为 允许上报的api')
@@ -39,21 +39,33 @@ export default class WebMonitor {
 
   insideReport(payload) {
     const reportUrl = this.reportUrl;
-    this.xhrReport(reportUrl, payload);
+    // this.xhrReport(reportUrl, payload);
     // this.imgReport(payload, reportUrl);
+    // this.beaconReport(payload, reportUrl);
+    typeof navigator.sendBeacon === 'function'
+      ? this.beaconReport(reportUrl, payload)
+      : this.xhrReport(payload, reportUrl)
   }
 
   xhrReport(reportUrl, payload) {
-    debugger
-    axios.get(reportUrl, { params: payload }).catch(err => {
+    axios.post(reportUrl, payload).catch(err => {
       console.log('sdk insideReport err', err)
     })
   }
 
+  // 复杂传参编码问题 ..
   imgReport(reportUrl, payload) {
     const data = selfStringify(payload)
     const img = new Image()
     img.src = `${reportUrl}?data=${data}`;
+  }
+
+  beaconReport(reportUrl, payload) {
+    const blob = new Blob([selfStringify(payload)], {
+      // type: 'application/x-www-form-urlencoded',
+      type: 'application/json; charset=UTF-8'
+    });
+    navigator.sendBeacon(reportUrl, blob);
   }
 
   init() {
@@ -84,7 +96,7 @@ export default class WebMonitor {
   // recordPromiseError
   // timing
 }
-console.log('最新修改版本ignore jsError ResizeObserver loop limit exceeded')
+console.log('版本修改时间为 2021-02-02 重写fetch 新增 beaconReport 上报')
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
 // window._userInfo = {
 //   userName: 'testName',
