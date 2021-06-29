@@ -1,10 +1,14 @@
+import recordPv from './monitor/lib/pv';
+import recordUv from './monitor/lib/uv';
 import recordJsError from './monitor/lib/jsError';
 import recordPromiseError from './monitor/lib/promiseError';
 import enhanceAjax from './monitor/lib/ajax';
 import enhanceFetch from './monitor/lib/fetch';
-import timing from './monitor/lib/timing';
+import performance from './monitor/lib/performance';
+import behavior from './monitor/lib/behavior';
+import querystring from 'querystring';
 import axios from 'axios';
-import { getExtraInfo, selfStringify } from './monitor/utils';
+import { getExtraInfo, selfStringify, retRandomString } from './monitor/utils';
 
 
 export default class WebMonitor {
@@ -24,27 +28,30 @@ export default class WebMonitor {
       resourceError: 0.3,
       apiError: 0.3,
       unhandledrejection: 0.3,
-      timing: 1
+      performance: 1
     }, frequency)
     this.reportUrl = reportUrl;
     this.allowApiList = allowApiList || []; // 允许上报的 /api   包含关系
 
     const reportInfo = report || this.insideReport; // 
     this.report = (params) => {
-      const payload = Object.assign(params, getExtraInfo(), { appName })
-      // console.log('payload', payload)
+      const { maskUser } = this; // 闭包获取对象 对象引用值
+      const payload = Object.assign({ appName, maskUser }, params, getExtraInfo())
       reportInfo.call(this, payload)
     };
   }
 
   insideReport(payload) {
     const reportUrl = this.reportUrl;
-    // this.xhrReport(reportUrl, payload);
-    // this.imgReport(payload, reportUrl);
-    // this.beaconReport(payload, reportUrl);
-    typeof navigator.sendBeacon === 'function'
-      ? this.beaconReport(reportUrl, payload)
-      : this.xhrReport(payload, reportUrl)
+    // if (typeof navigator.sendBeacon === 'function') {
+    //   return this.beaconReport(reportUrl, payload)
+    // }
+    const url = `${reportUrl}?${querystring.stringify(payload)}`;
+    // IE 2083  firefox  65536  chrome 8182 Safari 80000 Opera 190000
+    if (url.length < 8000) {
+      return this.imgReport(url);
+    }
+    this.xhrReport(reportUrl, payload);
   }
 
   xhrReport(reportUrl, payload) {
@@ -53,11 +60,11 @@ export default class WebMonitor {
     })
   }
 
-  // 复杂传参编码问题 ..
-  imgReport(reportUrl, payload) {
-    const data = selfStringify(payload)
+  // img 标签上报 ...
+  imgReport(url) {
     const img = new Image()
-    img.src = `${reportUrl}?data=${data}`;
+    img.src = url;
+    img.crossorigin= 'anonymous';
   }
 
   beaconReport(reportUrl, payload) {
@@ -69,13 +76,22 @@ export default class WebMonitor {
   }
 
   init() {
+    this.recordUv() // 生成 maskUser 所以 需要先执行
+    this.recordPv()
     this.recordJsError()
     this.recordPromiseError()
     this.enhanceAjax()
     this.enhanceFetch()
-    this.timing()
+    this.performance()
+    this.behavior()
   }
 
+  recordPv(...r) {
+    recordPv.apply(this, r)
+  }
+  recordUv(...r) {
+    recordUv.apply(this, r)
+  }
   enhanceAjax(...r) {
     enhanceAjax.apply(this, r)
   }
@@ -88,15 +104,14 @@ export default class WebMonitor {
   recordPromiseError(...r) {
     recordPromiseError.apply(this, r)
   }
-  timing(...r) {
-    timing.apply(this, r)
+  performance(...r) {
+    performance.apply(this, r)
   }
-  // enhanceAjax
-  // recordJsErrorå
-  // recordPromiseError
-  // timing
+  behavior(...r) {
+    behavior.apply(this, r)
+  }
 }
-console.log('版本修改时间为 2021-02-02 重写fetch 新增 beaconReport 上报')
+console.log('版本修改时间为 2021-06-29')
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
 // window._userInfo = {
 //   userName: 'testName',

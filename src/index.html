@@ -17,17 +17,17 @@
     };
     new WebMonitor({
       appName: 'Test',
-      reportUrl: 'http://127.0.0.1:7003/webmonitor/report',
+      reportUrl: 'http://127.0.0.1:7001/webmonitor/report',
       allowApiList: ['/self'], // 允许上报的 /api 包含关系 
       // report(payload) {
       //   console.log('payload --> ', payload)
       // },
-      // frequency: {
-      //   jsError: 1,
-      //   resourceError: 1,
-      //   apiError: 1,
-      //   unhandledrejection: 1,
-      // }
+      frequency: {
+        jsError: 1,
+        resourceError: 1,
+        apiError: 1,
+        unhandledrejection: 1,
+      }
     }).init()
   </script>
   <div>
@@ -40,6 +40,14 @@
     <button onclick="addImage()">add img</button>
     <button onclick="fetchSuccess()">fetch success</button>
     <button onclick="fetchError()">fetch error</button>
+    <button onclick="hashChange()">hashChange</button>
+    <ul>
+      <li class="li-1">li 1</li>
+      <li id="id-2">li 2</li>
+      <li>li 3</li>
+      <li class="li-4" id="id-4">li 4</li>
+    </ul>
+    <p>pppp</p>
   </div>
   <script>
     function handleJsError() {
@@ -144,6 +152,9 @@
       })
     }
 
+    function hashChange() {
+      location.hash = '#/sss?a=1'
+    }
   </script>
   <!-- <script src="/xx.js"></script> -->
 

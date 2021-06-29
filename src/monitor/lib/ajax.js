@@ -12,8 +12,8 @@ export default function enhanceAjax() {
     const requestUrl = selfDecodeURI(url)
     const method = arguments[0].toLowerCase()
     const { path } = URL.parse(requestUrl)
-    
-    
+
+
     if (allowApiList.some(api => path.startsWith(api))) { // 匹配是否需要 上传
       this.needReport = true;
       this._url = requestUrl;
@@ -31,11 +31,11 @@ export default function enhanceAjax() {
         const { status, statusText, response, _url: requestUrl, _method: method } = this;
 
         const { query } = URL.parse(requestUrl)
-        
+
         const isSuccessStatus = (status >= 200 && status < 300) || status === 304;
         const willdo = Math.random() < apiError;
         // 不上报成功的 接口
-        if (type === 'load' && isSuccessStatus) return
+        // if (type === 'load' && isSuccessStatus) return
         const payload = {
           type: 'api',
           requestType: 'ajax',
@@ -48,6 +48,7 @@ export default function enhanceAjax() {
           ajaxType: type, // load error abord
           body, // send 入参 请求体
           response: selfStringify(response),
+          isSuccess: type === 'load' && isSuccessStatus ? 0 : -1, // 接口是否异常
         }
 
         willdo && report && report(payload) // 实例挂载的 上报方法

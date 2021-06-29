@@ -51,14 +51,15 @@ export default function enhanceFetch() {
             const isSuccessStatus = ok || status === 304;
             // const isSuccessStatus = (status >= 200 && status < 300) || status === 304;
 
-            if (!isSuccessStatus && allowApiList.some(api => path.startsWith(api))) {
+            if (allowApiList.some(api => path.startsWith(api))) {
               Object.assign(payload, {
+                isSuccess: isSuccessStatus ? 0 : -1,
                 response: selfStringify(result),
                 status,
                 statusText,
                 duration: Date.now() - startTime,
               })
-
+  
               willdo && report && report(payload) // 实例挂载的 上报方法
             }
           })
