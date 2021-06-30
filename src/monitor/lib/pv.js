@@ -1,3 +1,5 @@
+import { sleep } from '../utils';
+
 const URL = require('url');
 
 let recordHash = '';
@@ -10,7 +12,9 @@ export default function recordPv() {
     const { hash } = location;
     if (hash === recordHash) return // 同一页面 不存在 pv + 1
     recordHash = hash;
-    report && report(retPayload(oldURL, newURL)) // 实例挂载的 上报方法`
+    report && sleep(3000).then(() => { // 刷新/载入页面 优先获取 userName 再上报
+      report(retPayload(oldURL, newURL)) 
+    })
   })
 
   // 第一次 加载 pv + 1
