@@ -24,10 +24,10 @@ export default class WebMonitor {
       throw new Error('/webmonitor 不能作为 允许上报的api')
     }
     this.frequency = Object.assign({
-      jsError: 0.3,
-      resourceError: 0.3,
-      apiError: 0.3,
-      unhandledrejection: 0.3,
+      jsError: 1,
+      resourceError: 1,
+      apiError: 1,
+      unhandledrejection: 0,
       performance: 1
     }, frequency)
     this.reportUrl = reportUrl;
