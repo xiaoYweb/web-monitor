@@ -11,14 +11,16 @@ import axios from 'axios';
 import { getExtraInfo, selfStringify, retRandomString } from './monitor/utils';
 
 
+let once = false; // init 只允许执行一次
 export default class WebMonitor {
   constructor(props) {
-    const { allowApiList, report, appName, reportUrl, frequency = {} } = props;
+    const {
+      allowApiList, report, appName,
+      reportUrl = 'https://monitor-test.xinc818.com/webmonitor/report',
+      frequency = {},
+    } = props;
     if (!appName) {
       throw new Error('appName 为必填项')
-    }
-    if (!report && !reportUrl) {
-      throw new Error('reportUrl 为必填项')
     }
     if (allowApiList.some(item => item.includes('webmonitor'))) {
       throw new Error('/webmonitor 不能作为 允许上报的api')
@@ -39,6 +41,8 @@ export default class WebMonitor {
       const payload = Object.assign({ appName, maskUser }, params, getExtraInfo())
       reportInfo.call(this, payload)
     };
+
+    this.init()
   }
 
   insideReport(payload) {
@@ -64,7 +68,7 @@ export default class WebMonitor {
   imgReport(url) {
     const img = new Image()
     img.src = url;
-    img.crossorigin= 'anonymous';
+    img.crossorigin = 'anonymous';
   }
 
   beaconReport(reportUrl, payload) {
@@ -76,6 +80,7 @@ export default class WebMonitor {
   }
 
   init() {
+    if (once) return;// init 只允许执行一次
     this.recordUv() // 生成 maskUser 所以 需要先执行
     this.recordPv()
     this.recordJsError()
@@ -84,6 +89,7 @@ export default class WebMonitor {
     this.enhanceFetch()
     this.performance()
     this.behavior()
+    once = true;
   }
 
   recordPv(...r) {
