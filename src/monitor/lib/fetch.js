@@ -72,10 +72,12 @@ export default function enhanceFetch() {
         return response;
       })
       .catch(err => {
+
         Object.assign(payload, {
           duration: Date.now() - startTime,
-          status: 0,
-          statusText: '接口中断',
+          status: -1,
+          statusText: retFetchErrMessage(err),
+          isSuccess: -1,
         })
 
         willdo && report && report(payload) // 实例挂载的 上报方法
@@ -83,4 +85,11 @@ export default function enhanceFetch() {
         return Promise.reject(err);
       })
   }
+}
+
+function retFetchErrMessage(err) {
+  const name = err?.name;
+  const message = err?.message;
+  if (!name && !message) return '接口中断';
+  return (name || '') + (message || '')
 }
