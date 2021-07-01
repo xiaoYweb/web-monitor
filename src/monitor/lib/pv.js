@@ -12,14 +12,15 @@ export default function recordPv() {
     const { hash } = location;
     if (hash === recordHash) return // 同一页面 不存在 pv + 1
     recordHash = hash;
-    report && sleep(3000).then(() => { // 刷新/载入页面 优先获取 userName 再上报
-      report(retPayload(oldURL, newURL)) 
-    })
+
+    report(retPayload(oldURL, newURL))
   })
 
+  const payload = { timestamp: String(Date.now()), ...retPayload('', location.href) }
   // 第一次 加载 pv + 1
-
-  report && report(retPayload('', location.href)) // 实例挂载的 上报方法`
+  report && sleep(3000).then(() => { // 刷新/载入页面 优先获取 userName 再上报
+    report(payload) // 实例挂载的 上报方法`
+  })
 }
 
 function retPayload(fromUrl, toUrl) {

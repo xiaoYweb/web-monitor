@@ -6,6 +6,7 @@ export default function performance() {
 
   window.addEventListener('load', () => {
     const willdo = Math.random() < performance;
+    const timestamp = String(Date.now())
     willdo && sleep(3000).then(() => {
       const {
         redirectStart,
@@ -53,6 +54,7 @@ export default function performance() {
         initDomTreeTime: domInteractive - responseEnd, // Request to completion of the DOM loading DOM解析耗时
         resourceTime: loadEventStart - domContentLoadedEventEnd, // 资源加载耗时
         ssl: secureConnectionStart ? connectEnd - secureConnectionStart : 0, // SSL安全连接耗时 只在HTTPS下有效。
+        timestamp,
       }
       
 

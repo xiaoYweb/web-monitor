@@ -38,7 +38,7 @@ export default class WebMonitor {
     const reportInfo = report || this.insideReport; // 
     this.report = (params) => {
       const { maskUser } = this; // 闭包获取对象 对象引用值
-      const payload = Object.assign({ appName, maskUser }, params, getExtraInfo())
+      const payload = Object.assign({ appName, maskUser }, getExtraInfo(), params)
       reportInfo.call(this, payload)
     };
 
@@ -47,13 +47,13 @@ export default class WebMonitor {
 
   insideReport(payload) {
     const reportUrl = this.reportUrl;
-    // if (typeof navigator.sendBeacon === 'function') {
-    //   return this.beaconReport(reportUrl, payload)
-    // }
     const url = `${reportUrl}?${querystring.stringify(payload)}`;
     // IE 2083  firefox  65536  chrome 8182 Safari 80000 Opera 190000
     if (url.length < 8000) {
       return this.imgReport(url);
+    }
+    if (typeof navigator.sendBeacon === 'function') {
+      return this.beaconReport(reportUrl, payload)
     }
     this.xhrReport(reportUrl, payload);
   }
