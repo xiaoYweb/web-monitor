@@ -8,7 +8,7 @@ import performance from './monitor/lib/performance';
 import behavior from './monitor/lib/behavior';
 import querystring from 'querystring';
 import axios from 'axios';
-import { getExtraInfo, selfStringify, retRandomString } from './monitor/utils';
+import { getExtraInfo, selfStringify } from './monitor/utils';
 
 
 let once = false; // init 只允许执行一次
@@ -52,9 +52,9 @@ export default class WebMonitor {
     if (url.length < 8000) {
       return this.imgReport(url);
     }
-    if (typeof navigator.sendBeacon === 'function') {
-      return this.beaconReport(reportUrl, payload)
-    }
+    // if (typeof navigator.sendBeacon === 'function') {
+    //   return this.beaconReport(reportUrl, payload)
+    // }
     this.xhrReport(reportUrl, payload);
   }
 
@@ -117,24 +117,7 @@ export default class WebMonitor {
     behavior.apply(this, r)
   }
 }
-console.log('版本修改时间为 2021-06-29')
+console.log('版本修改时间为 2021-07-07 新增点击后所需点击dom innerHTML内容')
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
-// window._userInfo = {
-//   userName: 'testName',
-//   userId: 'testId',
-// };
-// new WebMonitor({
-//   appName: 'Test',
-//   reportUrl: 'http://127.0.0.1:7003/webmonitor/report',
-//   report: (payload) => { // 上报内容
-//     console.log('report --> payload', payload)
-//     axios.post('http://127.0.0.1:7003/webmonitor/report', payload).catch(err => {
-
-//     })
-//     const data = selfStringify(payload)
-//     axios.get('http://127.0.0.1:7003/webmonitor/report', { params: { data } }).catch(err => {
-
-//     })
-//   },
-//   allowApiList: ['/self'], // 允许上报的 /api 包含关系 
-// }).init()
+// sendBeacon上传问题
+//  Uncaught SecurityError: Failed to execute 'sendBeacon' on 'Navigator': sendBeacon() with a Blob whose type is not any of the CORS-safelisted values for the Content-Type request header is disabled temporarily. See http://crbug.com/490015 for details.
