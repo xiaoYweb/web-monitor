@@ -49,6 +49,7 @@ export default function enhanceAjax() {
           body, // send 入参 请求体
           response: selfStringify(response),
           isSuccess: type === 'load' && isSuccessStatus ? 0 : -1, // 接口是否异常
+          timestamp: String(Date.now()),
         }
 
         willdo && report && report(payload) // 实例挂载的 上报方法

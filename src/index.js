@@ -46,6 +46,7 @@ export default class WebMonitor {
   }
 
   insideReport(payload) {
+    return
     const reportUrl = this.reportUrl;
     const url = `${reportUrl}?${querystring.stringify(payload)}`;
     // IE 2083  firefox  65536  chrome 8182 Safari 80000 Opera 190000
@@ -117,7 +118,7 @@ export default class WebMonitor {
     behavior.apply(this, r)
   }
 }
-console.log('版本修改时间为 2021-07-07 新增点击后所需点击dom innerHTML内容')
+console.log('版本修改时间为 2021-07-08 调整xpath 输出')
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
 // sendBeacon上传问题
 //  Uncaught SecurityError: Failed to execute 'sendBeacon' on 'Navigator': sendBeacon() with a Blob whose type is not any of the CORS-safelisted values for the Content-Type request header is disabled temporarily. See http://crbug.com/490015 for details.

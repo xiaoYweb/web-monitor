@@ -9,6 +9,7 @@ function behavior() {
       path,
       type: 'behavior',
       behaviorType: ev.type || 'click',
+      timestamp: String(Date.now()),
     }
     report(payload)
   }, 500)
@@ -18,14 +19,13 @@ function behavior() {
 
 function getXPath(ev) {
   const target = ev.target;
-  const val = target?.innerHTML || '';
+  const val = target?.innerText;
   const { className, id } = target || {}
   let path = ev.path.slice(0, -2).map(item => item.nodeName).reverse().join('/').toLowerCase();
   className && (path = `${path}.${className}`);
   id && (path = `${path}#${id}`);
-  return val.length > 10
-    ? `${path}(...)`
-    : `${path}(${val})`;
+  if (typeof val !== 'string') return path;
+  return val.length > 10 ? `${path}(...)` : `${path}(${val})`;
 }
 
 export default behavior;

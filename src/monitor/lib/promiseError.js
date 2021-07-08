@@ -7,6 +7,7 @@ export default function recordPromiseError() {
     const willdo = Math.random() < unhandledrejection;
     const payload = {
       type: 'unhandledRejection',
+      timestamp: String(Date.now()),
     }
     const { reason } = ev;
 

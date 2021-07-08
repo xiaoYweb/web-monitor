@@ -13,7 +13,6 @@ export function getExtraInfo() {
   const userAgentInfo = userAgent.parse(navigator.userAgent)
   const { userId, userName } = window?._userInfo || {};
   return {
-    timestamp: String(Date.now()),
     ua: navigator.userAgent,
     userAgent: userAgentInfo.fullName,
     url: location.href,

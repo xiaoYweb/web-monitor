@@ -20,6 +20,7 @@ export default function recordJsError() {
         type: 'resourceError', // resource error、
         nodeName, // 标签名
         source: target.href || target.src, // 资源地址
+        timestamp: String(Date.now()),
       }
       willdo && report && report(payload) // 实例挂载的 上报方法
       return
@@ -43,6 +44,7 @@ export default function recordJsError() {
       // col: colno,
       position: `${lineno}:${colno}`,
       stack: ev?.error?.stack,
+      timestamp: String(Date.now()),
     }
 
     willdo && report && report(payload) // 实例挂载的 上报方法

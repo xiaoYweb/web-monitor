@@ -39,6 +39,7 @@ export default function enhanceFetch() {
       // fetchType: type, // basic cors opaque
       // fetchMode: mode,
       body, // 入参 请求体
+      timestamp: String(Date.now()),
     }
     return _fetch.apply(this, arguments)
       .then(response => {
