@@ -37,6 +37,18 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
     port: 9000,
+    // compress: true, // 启动 gizp 压缩
+    // open: '', //
+    // hot: true, // 开启 hrm 功能
+    // watchContentBase: true, // 监听 目录下文件
+    // proxy: {  // 代理服务器 
+    //   '/api':  {
+    //     target: 'http://localhost: 3000',
+    //     pathRewrite: {
+    //       '^/api': '', // 路径重写
+    //     }
+    //   }
+    // },
     before(router) {
       router.post('/self/success', function (req, res) {
         res.statusCode = 202;

@@ -14,7 +14,7 @@ export default function enhanceAjax() {
     const { path } = URL.parse(requestUrl)
 
 
-    if (allowApiList.some(api => path.startsWith(api))) { // 匹配是否需要 上传
+    if (typeof path === 'string' && allowApiList.some(api => path.startsWith(api))) { // 匹配是否需要 上传
       this.needReport = true;
       this._url = requestUrl;
       this._method = method;
