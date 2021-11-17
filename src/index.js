@@ -117,7 +117,7 @@ export default class WebMonitor {
     behavior.apply(this, r)
   }
 }
-console.log('版本修改时间为 2021-07-08 每条上报记录单独加入时间')
+console.log('版本修改时间为 2021-11-17 支持fetch new Request 传参方式')
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
 // sendBeacon上传问题
 //  Uncaught SecurityError: Failed to execute 'sendBeacon' on 'Navigator': sendBeacon() with a Blob whose type is not any of the CORS-safelisted values for the Content-Type request header is disabled temporarily. See http://crbug.com/490015 for details.
