@@ -23,7 +23,6 @@ export default function enhanceFetch() {
 
     return getFetchParams(arguments).then(payload => {
       const startTime = Date.now();
-
       return _fetch.apply(this, args)
         .then(response => {
           const { url, status, statusText, ok, headers, type } = response;
@@ -34,6 +33,7 @@ export default function enhanceFetch() {
               result = selfParse(result)
               const isSuccessStatus = ok || status === 304;
               // const isSuccessStatus = (status >= 200 && status < 300) || status === 304;
+              const { pathname: path } = payload;
 
               if (typeof path === 'string' && allowApiList.some(api => path.startsWith(api))) {
                 Object.assign(payload, {
@@ -43,14 +43,12 @@ export default function enhanceFetch() {
                   statusText,
                   duration: Date.now() - startTime,
                 })
-
+                
                 report && report(payload) // 实例挂载的 上报方法
               }
             })
           } catch (err) {
 
-          } finally {
-            report && report(payload) // 实例挂载的 上报方法
           }
 
           return response;
@@ -105,13 +103,14 @@ function getFetchParams(args) {
       }
 
       if (args.length === 2) {
-        const { query } = URL.parse(args[0])
+        const { query,path } = URL.parse(args[0])
         defaultParams.requestUrl = args[0]
         const { method, body } = args[1] || {}
         method && Object.assign(defaultParams, {
           method: method.toLowerCase(),
           body: selfParse(body),
-          query
+          query,
+          pathname: path
         })
         return resolve(defaultParams)
       }
@@ -119,11 +118,12 @@ function getFetchParams(args) {
       // 参数 new Request 包裹
       if (args[0] instanceof Request) {
         const { method, url } = args[0]
-        const { query } = URL.parse(url)
+        const { query, path } = URL.parse(url)
         method && Object.assign(defaultParams, {
           method: method.toLowerCase(),
           requestUrl: url,
           query,
+          pathname: path
         })
 
         // 此处 获取 body内容 是  被 promise对象 包裹的  所以 
@@ -135,12 +135,13 @@ function getFetchParams(args) {
 
       // 参数 为 单个 options 
       const { url, method, body } = args[0]
-      const { query } = URL.parse(url)
+      const { query, path } = URL.parse(url)
       return resolve(Object.assign(defaultParams, {
         method: method.toLowerCase(),
         requestUrl: url,
         body: selfParse(body),
-        query
+        query,
+        pathname: path
       }))
     } catch (err) {
       return reject(err)
