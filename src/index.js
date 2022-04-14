@@ -8,7 +8,7 @@ import performance from './monitor/lib/performance';
 import behavior from './monitor/lib/behavior';
 import querystring from 'querystring';
 import axios from 'axios';
-import { getExtraInfo, selfStringify } from './monitor/utils';
+import { getExtraInfo, selfStringify, getLocalStorageUid } from './monitor/utils';
 
 
 let once = false; // init 只允许执行一次
@@ -37,7 +37,7 @@ export default class WebMonitor {
 
     const reportInfo = report || this.insideReport; // 
     this.report = (params) => {
-      const { maskUser } = this; // 闭包获取对象 对象引用值
+      const { maskUser } = getLocalStorageUid(); // 闭包获取对象 对象引用值
       const payload = Object.assign({ appName, maskUser }, getExtraInfo(), params)
       reportInfo.call(this, payload)
     };
@@ -117,7 +117,7 @@ export default class WebMonitor {
     behavior.apply(this, r)
   }
 }
-console.log('版本修改时间为 2021-11-17 支持fetch new Request 传参方式')
+console.log('版本修改时间为 2021-12-22 修改uv 规则  当天多次登录用户 仅上报一次 uv数据')
 // ------------- 下方代码 build 后 需要注释 ------------------------------------------
 // sendBeacon上传问题
 //  Uncaught SecurityError: Failed to execute 'sendBeacon' on 'Navigator': sendBeacon() with a Blob whose type is not any of the CORS-safelisted values for the Content-Type request header is disabled temporarily. See http://crbug.com/490015 for details.

@@ -1,25 +1,23 @@
-import { retRandomString, sleep } from '../utils/index';
+import { sleep, getLocalStorageUid } from '../utils/index';
 
 
 
 // uv 统计 初始化 init执行 也就是 登入 或者 刷新执行 
 export default function recordUv() { // 载入/刷新页面 执行一次
   const { report } = this;
-  if (this.maskUser) return;
-  let maskUser = sessionStorage.getItem('mask_user');
-  if (maskUser) {
-    this.maskUser = maskUser;
-    return
-  }
-  maskUser = retRandomString()
-  this.maskUser = maskUser;
-  sessionStorage.setItem('mask_user', maskUser)
-  const payload = { type: 'uv', maskUser, timestamp: String(Date.now()) }
-  // report && sleep(3000).then(() => { // 刷新/载入页面 优先获取 userName 再上报
-  //   report(payload) // 实例挂载的 上报方法`
-  // })
+  // if (this.maskUser) return; // 若存在此 用户 uid
+  const { maskUser, isFirstVist } = getLocalStorageUid();
+  if (isFirstVist) {
+    const payload = { 
+      type: 'uv', 
+      maskUser, 
+      timestamp: String(Date.now()),
+    }
 
-  handleDelayExec(report, payload)
+   
+    // 延迟上报 
+    handleDelayExec(report, payload)
+  }
 }
 
 function handleDelayExec(fn, payload, delayCount = 3) {
@@ -40,4 +38,3 @@ function handleDelayExec(fn, payload, delayCount = 3) {
     handleDelayExec(fn, payload, delayCount)
   })
 }
-

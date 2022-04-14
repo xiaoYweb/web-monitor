@@ -68,11 +68,41 @@ export function retRandomString(len = 10) {
 
 export function throttle(cb, wait = 300) {
   let prev = Date.now();
-  return function() {
+  return function () {
     let current = Date.now();
     if (current - prev > wait) {
       prev = current;
       return cb.apply(this, arguments)
     }
   }
+}
+
+
+const storyKey = 'xc_uid';
+
+export function getLocalStorageUid() {
+  let { maskUser, expireTime } = selfParse(localStorage.getItem(storyKey)) || {}
+  const nowTimestamp = Date.now()
+  // 重新 设置 条件:  第一次 登录 或者 >= 过期时间
+  if (!maskUser || !expireTime || nowTimestamp >= expireTime) {
+    expireTime = calcExpireTime(nowTimestamp)
+    maskUser = retRandomString()
+    setLocalStorageUid({ maskUser, expireTime })
+    return {
+      maskUser,
+      expireTime,
+      isFirstVist: true
+    }
+  }
+  return { maskUser, expireTime }
+}
+
+export function setLocalStorageUid(data) {
+  return localStorage.setItem(storyKey, JSON.stringify(data))
+}
+
+function calcExpireTime(timestamp = Date.now()) {
+  const dis = 24 * 3600 * 1000
+  const expireTime = (Math.ceil(timestamp / dis) + 1) * dis
+  return expireTime
 }

@@ -21,14 +21,8 @@
       allowApiList: ['/self'], // 允许上报的 /api 包含关系 
       report(payload) {
         console.log('payload --> ', payload)
-      },
-      frequency: {
-        jsError: 1,
-        resourceError: 1,
-        apiError: 1,
-        unhandledrejection: 1,
       }
-    }).init()
+    });
   </script>
   <div>
     <button onclick="handleJsError()">js err</button>
